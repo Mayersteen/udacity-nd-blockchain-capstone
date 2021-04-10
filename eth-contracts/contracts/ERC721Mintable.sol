@@ -594,14 +594,41 @@ contract ERC721Metadata is ERC721Enumerable, usingOraclize {
 
 }
 
-//  TODO's: Create CustomERC721Token contract that inherits from the ERC721Metadata contract. You can name this contract as you please
-//  1) Pass in appropriate values for the inherited ERC721Metadata contract
-//      - make the base token uri: https://s3-us-west-2.amazonaws.com/udacity-blockchain/capstone/
-//  2) create a public mint() that does the following:
-//      -can only be executed by the contract owner
-//      -takes in a 'to' address, tokenId, and tokenURI as parameters
-//      -returns a true boolean upon completion of the function
-//      -calls the superclass mint and setTokenURI functions
+//  TODO's: Create CustomERC721Token contract that inherits from the ERC721Metadata contract. 
+//  You can name this contract as you please
 
+contract ERC721Mintable is ERC721Metadata {
+    //  1) Pass in appropriate values for the inherited ERC721Metadata contract
+    //      - make the base token uri: https://s3-us-west-2.amazonaws.com/udacity-blockchain/capstone/
+    string constant BASE_TOKEN_URI = "https://s3-us-west-2.amazonaws.com/udacity-blockchain/capstone/";
 
+    constructor (
+        string memory name, 
+        string memory symbol
+    )
+        ERC721Metadata(name, symbol, BASE_TOKEN_URI) 
+        public
+    {
 
+    }
+
+    //  2) create a public mint() that does the following:
+    //      -can only be executed by the contract owner
+    //      -takes in a 'to' address, tokenId, and tokenURI as parameters
+    //      -returns a true boolean upon completion of the function
+    //      -calls the superclass mint and setTokenURI functions
+    function mint(
+        address to,
+        unit256 tokenId,
+        string memory tokenURI
+    )
+        public
+        onlyOwner
+        returns (bool)
+    {
+        super._mint(to, tokenId);
+        super._setTokenURI(tokenId, tokenURI);
+        return true;
+    }
+
+}
