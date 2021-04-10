@@ -312,7 +312,7 @@ contract ERC721 is Pausable, ERC165 {
 
         // TODO: clear approval
         _clearApproval(tokenId);
-        
+
         // TODO: update token counts & transfer ownership of the token ID 
         _ownedTokensCount[from].decrement();
         _ownedTokensCount[to].increment();
@@ -525,8 +525,12 @@ contract ERC721Enumerable is ERC165, ERC721 {
 contract ERC721Metadata is ERC721Enumerable, usingOraclize {
     
     // TODO: Create private vars for token _name, _symbol, and _baseTokenURI (string)
-
+    string private _name;
+    string private _symbol;
+    stirng private _baseTokenURI;
+    
     // TODO: create private mapping of tokenId's to token uri's called '_tokenURIs'
+    mapping(uint256 => string) private _tokenURIs;
 
     bytes4 private constant _INTERFACE_ID_ERC721_METADATA = 0x5b5e139f;
     /*
@@ -536,14 +540,39 @@ contract ERC721Metadata is ERC721Enumerable, usingOraclize {
      *     bytes4(keccak256('tokenURI(uint256)'))
      */
 
-
     constructor (string memory name, string memory symbol, string memory baseTokenURI) public {
         // TODO: set instance var values
+        _name = name;
+        _symbol = symbol;
+        _baseTokenURI = baseTokenURI;
 
         _registerInterface(_INTERFACE_ID_ERC721_METADATA);
     }
 
     // TODO: create external getter functions for name, symbol, and baseTokenURI
+    /**
+     * @dev Getter function for the tokens "name"
+     * @return tokens "name" as string
+     */
+    function name() external view returns (string) {
+        return _name;
+    }
+
+    /**
+     * @dev Getter function for the tokens "symbol"
+     * @return tokens "symbol" as string
+     */
+    function symbol() external view returns (string) {
+        return _symbol;
+    }
+
+    /**
+     * @dev Getter function for the tokens "baseTokenURI"
+     * @return tokens "baseTokenURI" as string
+     */
+    function baseTokenURI() external view returns (string) {
+        return _baseTokenURI;
+    }
 
     function tokenURI(uint256 tokenId) external view returns (string memory) {
         require(_exists(tokenId));
@@ -557,6 +586,11 @@ contract ERC721Metadata is ERC721Enumerable, usingOraclize {
     // TIP #2: you can also use uint2str() to convert a uint to a string
         // see https://github.com/oraclize/ethereum-api/blob/master/oraclizeAPI_0.5.sol for strConcat()
     // require the token exists before setting
+    function _setTokenURI(uint256 tokenId, string memory uri) internal {
+        require(_exists(tokenId), "ERC721Metadata: tokenID must exist");
+        string memory completeTokenURI = strConcat(_baseTokenURI, uri);
+        _tokenURIs[tokenId] = completeTokenURI;
+    }
 
 }
 
