@@ -6,18 +6,51 @@ import 'openzeppelin-solidity/contracts/math/SafeMath.sol';
 import 'openzeppelin-solidity/contracts/token/ERC721/IERC721Receiver.sol';
 import "./Oraclize.sol";
 
+ //  TODO's: Implement the Ownable contract
+ //  1) create a private '_owner' variable of type address with a public getter function
+ //  2) create an internal constructor that sets the _owner var to the creater of the contract 
+ //  3) create an 'onlyOwner' modifier that throws if called by any account other than the owner.
+ //  4) fill out the transferOwnership function
+ //  5) create an event that emits anytime ownerShip is transfered (including in the constructor)
+
 contract Ownable {
-    //  TODO's
-    //  1) create a private '_owner' variable of type address with a public getter function
-    //  2) create an internal constructor that sets the _owner var to the creater of the contract 
-    //  3) create an 'onlyOwner' modifier that throws if called by any account other than the owner.
-    //  4) fill out the transferOwnership function
-    //  5) create an event that emits anytime ownerShip is transfered (including in the constructor)
 
+    address private _owner;
+
+    event TransferOwnership(address from, address to);
+
+    /**
+    * @dev Constructor that sets the contract owner.
+    */
+    constructor() internal {
+        _owner = msg.sender;
+        emit TransferOwnership(address(0), _owner);
+    }
+
+    /**
+     * @dev This modifier allows functions to be callable only by the contract owner.
+     */
+    modifier onlyOwner() {
+        require(isOwner(), "Ownable: Caller must be the owner!");
+        _;
+    }
+
+    /**
+     * @dev getter function for the private _owner variable.
+     */
+    function isOwner() public view returns (address) {
+        return _owner;
+    }
+
+    /**
+     * @dev This function allows to transfer the ownership of the contract to a new owner.
+     * Emits a TransferOwnership event if the checks pass and the ownership is changed.
+     */
     function transferOwnership(address newOwner) public onlyOwner {
-        // TODO add functionality to transfer control of the contract to a newOwner.
-        // make sure the new owner is a real address
-
+        require(newOwner != address(0), "Owner must not be address(0)");
+        require(newOwner != _owner, "Owner cannot transfer contract to themselves");
+        _owner = newOwner;
+        emit TransferOwnership(_owner, newOwner);
     }
 }
 
@@ -27,6 +60,64 @@ contract Ownable {
 //  3) create an internal constructor that sets the _paused variable to false
 //  4) create 'whenNotPaused' & 'paused' modifier that throws in the appropriate situation
 //  5) create a Paused & Unpaused event that emits the address that triggered the event
+
+contract Pausable is Ownable {
+
+    /**
+    * @dev private variable to allow defining the pause state.
+    */
+    bool private _paused;
+
+    event Paused(address account);
+    event Unpaused(address account);
+
+    /**
+    * @dev Constructor that initialized the contract and sets the initial state to unpaused.
+    */
+    constructor() internal {
+        _paused = false;
+    }
+
+    /**
+    * @dev Modifier that lets a function only get called when the contract is not paused.
+    */
+    modifier whenNotPaused() {
+        require(!_paused, "Pausable: must not be paused");
+        _;
+    }
+
+    /**
+    * @dev Modifier that lets a function only get called when the contract is paused.
+    */
+    modifier whenPaused() {
+        require(_paused, "Pausable: must be paused");
+        _;
+    }
+
+    /**
+    * @dev Returns the paused state: true -> paused, false -> not paused
+    */
+    function paused() public view returns (bool) {
+        return _paused;
+    }
+
+    /**
+    * @dev Function that lets the contract owner pause the contract when it is not paused.
+    */
+    function pause() public onlyOwner whenNotPaused {
+        _paused = true;
+        emit Paused(msg.sender);
+    }
+
+    /**
+    * @dev Function that lets the contract owner unpause the contract when it is paused.
+    */
+    function unpause() public onlyOwner whenPaused {
+        _paused = false;
+        emit Unpaused(msg.sender);
+    }
+
+}
 
 contract ERC165 {
     bytes4 private constant _INTERFACE_ID_ERC165 = 0x01ffc9a7;
