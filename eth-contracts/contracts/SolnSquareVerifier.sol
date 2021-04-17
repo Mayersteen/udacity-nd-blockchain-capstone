@@ -31,28 +31,3 @@ pragma solidity >=0.4.21 <0.6.0;
 //  - make sure you handle metadata as well as tokenSuplly
 
   
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
