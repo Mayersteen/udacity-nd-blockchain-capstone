@@ -38,8 +38,14 @@ contract Ownable {
     /**
      * @dev getter function for the private _owner variable.
      */
-    function isOwner() public view returns (address) {
+    function owner() public view returns (address) {
         return _owner;
+    }
+
+    /**
+     * @dev returns true if the msg.sender is the owner of the contract.
+     */    function isOwner() public view returns (bool) {
+        return msg.sender == _owner;
     }
 
     /**
@@ -217,7 +223,7 @@ contract ERC721 is Pausable, ERC165 {
         _tokenApprovals[tokenId] = to;
 
         // TODO emit Approval Event
-        emit Approval(owner(), to, tokeinId);
+        emit Approval(owner(), to, tokenId);
     }
 
     function getApproved(uint256 tokenId) public view returns (address) {
@@ -527,7 +533,7 @@ contract ERC721Metadata is ERC721Enumerable, usingOraclize {
     // TODO: Create private vars for token _name, _symbol, and _baseTokenURI (string)
     string private _name;
     string private _symbol;
-    stirng private _baseTokenURI;
+    string private _baseTokenURI;
     
     // TODO: create private mapping of tokenId's to token uri's called '_tokenURIs'
     mapping(uint256 => string) private _tokenURIs;
@@ -554,7 +560,7 @@ contract ERC721Metadata is ERC721Enumerable, usingOraclize {
      * @dev Getter function for the tokens "name"
      * @return tokens "name" as string
      */
-    function name() external view returns (string) {
+    function name() external view returns (string memory) {
         return _name;
     }
 
@@ -562,7 +568,7 @@ contract ERC721Metadata is ERC721Enumerable, usingOraclize {
      * @dev Getter function for the tokens "symbol"
      * @return tokens "symbol" as string
      */
-    function symbol() external view returns (string) {
+    function symbol() external view returns (string memory) {
         return _symbol;
     }
 
@@ -570,7 +576,7 @@ contract ERC721Metadata is ERC721Enumerable, usingOraclize {
      * @dev Getter function for the tokens "baseTokenURI"
      * @return tokens "baseTokenURI" as string
      */
-    function baseTokenURI() external view returns (string) {
+    function baseTokenURI() external view returns (string memory) {
         return _baseTokenURI;
     }
 
@@ -619,7 +625,7 @@ contract ERC721Mintable is ERC721Metadata {
     //      -calls the superclass mint and setTokenURI functions
     function mint(
         address to,
-        unit256 tokenId,
+        uint256 tokenId,
         string memory tokenURI
     )
         public
