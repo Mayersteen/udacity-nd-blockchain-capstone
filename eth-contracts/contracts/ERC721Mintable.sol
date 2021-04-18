@@ -592,10 +592,9 @@ contract ERC721Metadata is ERC721Enumerable, usingOraclize {
     // TIP #2: you can also use uint2str() to convert a uint to a string
         // see https://github.com/oraclize/ethereum-api/blob/master/oraclizeAPI_0.5.sol for strConcat()
     // require the token exists before setting
-    function _setTokenURI(uint256 tokenId, string memory uri) internal {
+    function _setTokenURI(uint256 tokenId) internal {
         require(_exists(tokenId), "ERC721Metadata: tokenID must exist");
-        string memory completeTokenURI = strConcat(_baseTokenURI, uri);
-        _tokenURIs[tokenId] = completeTokenURI;
+        _tokenURIs[tokenId] = strConcat(_baseTokenURI, uint2str(tokenId));
     }
 
 }
@@ -615,7 +614,6 @@ contract ERC721Mintable is ERC721Metadata {
         ERC721Metadata(name, symbol, BASE_TOKEN_URI) 
         public
     {
-
     }
 
     //  2) create a public mint() that does the following:
@@ -625,15 +623,14 @@ contract ERC721Mintable is ERC721Metadata {
     //      -calls the superclass mint and setTokenURI functions
     function mint(
         address to,
-        uint256 tokenId,
-        string memory tokenURI
+        uint256 tokenId
     )
         public
         onlyOwner
         returns (bool)
     {
         super._mint(to, tokenId);
-        super._setTokenURI(tokenId, tokenURI);
+        super._setTokenURI(tokenId);
         return true;
     }
 
