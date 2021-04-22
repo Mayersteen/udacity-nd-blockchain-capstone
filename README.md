@@ -2,8 +2,21 @@
 
 The capstone will build upon the knowledge you have gained in the course in order to build a decentralized housing product. 
 
-# Test
+# Final Results
+OpenSea Marketplace:
+```https://testnets.opensea.io/collection/my-test-token-atete5np5q/assets/```
 
+Contract Address and Etherscan URL:
+```0x906179b359927f3ea9a6c2074f8d301b767924df```
+```https://rinkeby.etherscan.io/address/0x906179b359927f3ea9a6c2074f8d301b767924df```
+
+Contract Owner and mint target:
+```0xb9b094e2FBa05aed9DEC6A258317171AD3F0e95b```
+
+Token Buyer:
+```0x5eF8Ec454583dBfb930cf38e913e0B2c344d61D2```
+
+# Test
 The local test was preformed with the following ganache-cli parameters:
 ```
 ganache-cli -m "candy maple cake sugar pudding cream honey rich smooth crumble s weet treat" -d -g 1 -l 999999999999999 -a 50 -e 1000000
@@ -13,8 +26,6 @@ Test Execution:
 ```
 > Compiled successfully using:
    - solc: 0.5.16+commit.9c3226ce.Emscripten.clang
-
-
 
   Contract: TestERC721Mintable
     match erc721 spec
