@@ -36,13 +36,14 @@ contract SolnSquareVerifier is ERC721Mintable {
 
     // TODO Create a function to add the solutions to the array and emit the event
     constructor (
+        address verifierContractAddress,
         string memory name, 
         string memory symbol
     )
         public
         ERC721Mintable(name, symbol)
     {
-        VerifierContract = new Verifier();
+        VerifierContract = Verifier(verifierContractAddress);
     }
 
     /**

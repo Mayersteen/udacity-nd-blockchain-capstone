@@ -1,4 +1,5 @@
-const SolnSquareVerifier = artifacts.require("SolnSquareVerifier");
+const SolnSquareVerifier = artifacts.require("./SolnSquareVerifier");
+const Verifier = artifacts.require("./Verifier.sol");
 const truffleAssert = require("truffle-assertions");
 
 contract("SolnSquareVerifier", accounts => {
@@ -7,7 +8,15 @@ contract("SolnSquareVerifier", accounts => {
     const account_two = accounts[1];
 
 	beforeEach(async function () {
-		this.contract = await SolnSquareVerifier.new("My Test Token", "MTT", { from: account_one });
+		this.VerifierContract = await Verifier.new({from: account_one});
+		this.contract = await SolnSquareVerifier.new(
+			this.VerifierContract.address,
+			"My Test Token",
+			"MTT",
+			{ 
+				from: account_one 
+			}
+		);
 	});
 
 	// Test if a new solution can be added for contract - SolnSquareVerifier
